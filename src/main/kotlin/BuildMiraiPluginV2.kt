@@ -21,9 +21,11 @@ import org.gradle.api.internal.artifacts.ivyservice.resolveengine.artifact.Artif
 import org.gradle.api.internal.artifacts.ivyservice.resolveengine.artifact.ResolvableArtifact
 import org.gradle.api.internal.file.FileCollectionInternal
 import org.gradle.api.internal.file.FileCollectionStructureVisitor
+import org.gradle.api.specs.Specs
 import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.TaskContainer
 import org.gradle.internal.DisplayName
+import org.gradle.internal.component.external.model.ImmutableCapabilities
 import org.gradle.internal.component.external.model.ModuleComponentArtifactIdentifier
 import org.gradle.jvm.tasks.Jar
 import org.gradle.kotlin.dsl.create
@@ -202,7 +204,7 @@ public open class BuildMiraiPluginV2 : Jar() {
             val lenientConfiguration = runtimeClasspath.lenientConfiguration
             if (lenientConfiguration is DefaultLenientConfiguration) {
                 val resolvedArtifacts = mutableSetOf<ResolvedArtifact>()
-                lenientConfiguration.select().visitArtifacts(object : ArtifactVisitor {
+                lenientConfiguration.select(Specs.satisfyAll()).visitArtifacts(object : ArtifactVisitor {
                     override fun prepareForVisit(source: FileCollectionInternal.Source): FileCollectionStructureVisitor.VisitType {
                         return FileCollectionStructureVisitor.VisitType.Visit
                     }
@@ -210,7 +212,7 @@ public open class BuildMiraiPluginV2 : Jar() {
                     override fun visitArtifact(
                         variantName: DisplayName,
                         variantAttributes: AttributeContainer,
-                        capabilities: MutableList<out Capability>,
+                        capabilities: ImmutableCapabilities,
                         artifact: ResolvableArtifact
                     ) {
                         resolvedArtifacts.add(artifact.toPublicView())

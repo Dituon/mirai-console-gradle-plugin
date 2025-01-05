@@ -1,5 +1,7 @@
 # Mirai Console Gradle Plugin
 
+本仓库是 [mirai-console/tools/gradle-plugin](https://github.com/mamoe/mirai/tree/dev/mirai-console/tools/gradle-plugin) 的分支, 更新 Gradle 版本至 `8.12`。
+
 Mirai Console Gradle 插件。
 
 ## 在构建中使用插件

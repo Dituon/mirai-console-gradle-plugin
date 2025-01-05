@@ -10,9 +10,9 @@
 @file:Suppress("UnusedImport")
 
 plugins {
-    kotlin("jvm")
+    kotlin("jvm") version ("1.8.10")
     id("java-gradle-plugin")
-    id("com.gradle.plugin-publish")
+    id("com.gradle.plugin-publish") version ("1.1.0")
     groovy
     id("java")
     //signing
@@ -37,22 +37,22 @@ dependencies {
 
     implementation("com.google.code.gson:gson:2.8.6")
 
-    api("com.github.jengelman.gradle.plugins:shadow:6.0.0")
-    api(`jetbrains-annotations`)
+    api("com.gradleup.shadow:shadow-gradle-plugin:8.3.5")
+    api("org.jetbrains:annotations:19.0.0")
 
     // override vulnerable Log4J version
     // https://blog.gradle.org/log4j-vulnerability
-    implementation(`log4j-api`)
-    implementation(`log4j-core`)
+    implementation("org.apache.logging.log4j:log4j-api:2.19.0")
+    implementation("org.apache.logging.log4j:log4j-core:2.19.0")
 
     testApi(kotlin("test-junit5"))
-    testApi(`junit-jupiter-api`)
-    testApi(`junit-jupiter-params`)
+    testApi("org.junit.jupiter:junit-jupiter-api:5.7.2")
+    testApi("org.junit.jupiter:junit-jupiter-params:5.7.2")
 
     "integTestApi"(kotlin("test-junit5"))
-    "integTestApi"(`junit-jupiter-api`)
-    "integTestApi"(`junit-jupiter-params`)
-    "integTestImplementation"(`junit-jupiter-engine`)
+    "integTestApi"("org.junit.jupiter:junit-jupiter-api:5.7.2")
+    "integTestApi"("org.junit.jupiter:junit-jupiter-params:5.7.2")
+    "integTestImplementation"("org.junit.jupiter:junit-jupiter-engine:")
     "integTestImplementation"(gradleTestKit())
 
     kotlinVersionForIntegrationTest(kotlin("gradle-plugin", "1.5.21"))
@@ -62,7 +62,7 @@ tasks.named<PluginUnderTestMetadata>("pluginUnderTestMetadata") {
     pluginClasspath.from(kotlinVersionForIntegrationTest)
 }
 
-version = Versions.console
+version = "2.16.0"
 description = "Gradle plugin for Mirai Console"
 
 kotlin {
@@ -104,8 +104,8 @@ tasks {
             projectDir.resolve("src/main/kotlin/VersionConstants.kt").apply { createNewFile() }
                 .writeText(
                     projectDir.resolve("src/main/kotlin/VersionConstants.kt.template").readText()
-                        .replace("$\$CONSOLE_VERSION$$", Versions.console)
-                        .replace("$\$CORE_VERSION$$", Versions.core)
+                        .replace("$\$CONSOLE_VERSION$$", "2.16.0")
+                        .replace("$\$CORE_VERSION$$", "2.16.0")
                 )
         }
     }
@@ -115,6 +115,12 @@ tasks {
     }
 }
 
-if (System.getenv("MIRAI_IS_SNAPSHOTS_PUBLISHING")?.toBoolean() == true) {
-    configurePublishing("mirai-console-gradle", skipPublicationSetup = true)
+
+//if (System.getenv("MIRAI_IS_SNAPSHOTS_PUBLISHING")?.toBoolean() == true) {
+//    configurePublishing("mirai-console-gradle", skipPublicationSetup = true)
+//}
+
+repositories {
+    maven { setUrl("https://maven.aliyun.com/repository/public") }
+    mavenCentral()
 }
